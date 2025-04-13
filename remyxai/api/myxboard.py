@@ -8,7 +8,7 @@ def store_myxboard(name: str, models: list, results: dict = None) -> dict:
     """Create and store a new MyxBoard on the server."""
     url = f"{BASE_URL}/myxboard/store"
     payload = {"name": name, "models": models, "results": results or None}
-    response = requests.post(url, json=payload, headers=HEADERS)  # POST request
+    response = requests.post(url, json=payload, headers=HEADERS, timeout=60)  # POST request
 
     log_api_response(response)  # Log the response
 
@@ -22,7 +22,7 @@ def store_myxboard(name: str, models: list, results: dict = None) -> dict:
 def list_myxboards() -> list:
     """List all MyxBoards from the server."""
     url = f"{BASE_URL}/myxboard/list"
-    response = requests.get(url, headers=HEADERS)  # GET request
+    response = requests.get(url, headers=HEADERS, timeout=60)  # GET request
 
     log_api_response(response)  # Log the response
 
@@ -49,7 +49,7 @@ def update_myxboard(
         "hf_collection_name": hf_collection_name,
     }
     logging.info(f"PUT request to {url} with payload: {payload}")
-    response = requests.put(url, json=payload, headers=HEADERS)
+    response = requests.put(url, json=payload, headers=HEADERS, timeout=60)
 
     if response.status_code == 200:
         try:
@@ -66,7 +66,7 @@ def delete_myxboard(myxboard_id: str) -> dict:
     """Delete an existing MyxBoard from the server."""
     url = f"{BASE_URL}/myxboard/delete/{myxboard_id}"
     logging.info(f"DELETE request to {url}")
-    response = requests.delete(url, headers=HEADERS)
+    response = requests.delete(url, headers=HEADERS, timeout=60)
 
     if response.status_code == 200:
         try:
@@ -83,7 +83,7 @@ def download_myxboard(myxboard_name: str) -> dict:
     """Download a MyxBoard's results using the name."""
     url = f"{BASE_URL}/myxboard/download/{myxboard_name}"
     logging.info(f"GET request to {url}")
-    response = requests.get(url, headers=HEADERS)
+    response = requests.get(url, headers=HEADERS, timeout=60)
 
     if response.status_code == 200:
         try:

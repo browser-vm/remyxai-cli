@@ -70,7 +70,7 @@ def list_evaluations() -> list:
     """List all evaluations from the server."""
     url = f"{BASE_URL}/evaluation/list"
     logging.info(f"GET request to {url}")
-    response = requests.get(url, headers=HEADERS)
+    response = requests.get(url, headers=HEADERS, timeout=60)
 
     if response.status_code == 200:
         try:
@@ -88,7 +88,7 @@ def download_evaluation(task_name: str, eval_name: str) -> dict:
     url = f"{BASE_URL}/evaluation/download/{task_name}/{eval_name}"
     logging.info(f"GET request to {url}")
 
-    response = requests.get(url, headers=HEADERS)
+    response = requests.get(url, headers=HEADERS, timeout=60)
 
     if response.status_code == 200:
         try:
@@ -107,7 +107,7 @@ def delete_evaluation(eval_type: str, eval_name: str) -> dict:
     """Delete an evaluation from the server."""
     url = f"{BASE_URL}/evaluation/delete/{eval_type}/{eval_name}"
     logging.info(f"POST request to {url}")
-    response = requests.post(url, headers=HEADERS)
+    response = requests.post(url, headers=HEADERS, timeout=60)
 
     if response.status_code == 200:
         try:

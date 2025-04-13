@@ -7,7 +7,7 @@ import shutil
 def list_datasets() -> list:
     """List all datasets from the server."""
     url = f"{BASE_URL}/datasets/list"
-    response = requests.get(url, headers=HEADERS) 
+    response = requests.get(url, headers=HEADERS, timeout=60) 
 
     log_api_response(response)  
 
@@ -21,7 +21,7 @@ def list_datasets() -> list:
 def download_dataset(dataset_type: str, dataset_name: str):
     """Download dataset by generating a presigned URL."""
     url = f"{BASE_URL}/datasets/download/{dataset_type}/{dataset_name}"
-    response = requests.get(url, headers=HEADERS, stream=True)
+    response = requests.get(url, headers=HEADERS, stream=True, timeout=60)
 
     log_api_response(response)
 
@@ -29,7 +29,7 @@ def download_dataset(dataset_type: str, dataset_name: str):
         presigned_url = response.json().get("presigned_url", "")
         if presigned_url:
             filename = f"{dataset_name}.csv"
-            with requests.get(presigned_url, stream=True) as r:
+            with requests.get(presigned_url, stream=True, timeout=60) as r:
                 with open(filename, "wb") as out_file:
                     shutil.copyfileobj(r.raw, out_file)
             return {"message": f"Dataset {dataset_name} downloaded successfully"}
@@ -44,7 +44,7 @@ def download_dataset(dataset_type: str, dataset_name: str):
 def delete_dataset(dataset_type: str, dataset_name: str) -> str:
     """Delete a dataset."""
     url = f"{BASE_URL}/datasets/delete/{dataset_type}/{dataset_name}"
-    response = requests.delete(url, headers=HEADERS)  
+    response = requests.delete(url, headers=HEADERS, timeout=60)  
 
     log_api_response(response)  
 

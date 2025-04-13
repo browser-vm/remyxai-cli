@@ -8,7 +8,7 @@ from . import BASE_URL, HEADERS, log_api_response
 
 def download_deployment_package(model_name, output_path):
     url = f"{BASE_URL}deployment/download/{model_name}"
-    response = requests.get(url, headers=HEADERS, stream=True)
+    response = requests.get(url, headers=HEADERS, stream=True, timeout=60)
     if response.status_code == 200:
         with open(output_path, "wb") as f:
             shutil.copyfileobj(response.raw, f)
