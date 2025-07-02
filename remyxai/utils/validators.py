@@ -5,6 +5,7 @@ import requests
 from typing import List, Tuple, Optional
 from huggingface_hub import HfFolder
 from remyxai.api.models import fetch_available_architectures
+from security import safe_requests
 
 def get_hf_token() -> Optional[str]:
     """
@@ -31,7 +32,7 @@ def validate_model_architecture(
     """
     try:
         api_url = f"https://huggingface.co/{model_id}/raw/main/config.json"
-        response = requests.get(api_url, headers=get_headers(hf_token), timeout=10)
+        response = safe_requests.get(api_url, headers=get_headers(hf_token), timeout=10)
         response.raise_for_status()
 
         config = response.json()
