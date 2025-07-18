@@ -14,7 +14,7 @@ def run_myxmatch(name: str, prompt: str, models: list) -> dict:
     logging.info(f"POST request to {url}")
     payload = {"name": name, "models": models_str, "prompt": prompt}
 
-    response = requests.post(url, headers=headers, data=payload)
+    response = requests.post(url, headers=headers, data=payload, timeout=60)
 
     if response.status_code == 202:
         try:
@@ -42,7 +42,7 @@ def run_benchmark(name: str, models: list, evals: list) -> dict:
 
     logging.info(f"POST request to {url} with payload: {payload}")
 
-    response = requests.post(url, headers=headers, data=payload)
+    response = requests.post(url, headers=headers, data=payload, timeout=60)
 
     if response.status_code == 202:
         try:
@@ -66,7 +66,7 @@ def get_job_status(job_name: str) -> dict:
     logging.info(f"GET request to {url}")
 
     try:
-        response = requests.get(url, headers=HEADERS)
+        response = requests.get(url, headers=HEADERS, timeout=60)
         logging.debug(f"Raw response from server: {response.text}")
 
         response.raise_for_status()
@@ -87,21 +87,21 @@ def train_classifier(
 ):
     url = f"{BASE_URL}task/classify/{model_name}/{','.join(labels)}/{model_selector}"
     params = {"hf_dataset": hf_dataset} if hf_dataset else None
-    response = requests.post(url, headers=HEADERS, params=params)
+    response = requests.post(url, headers=HEADERS, params=params, timeout=60)
     return response.json()
 
 
 def train_detector(model_name: str, labels: list, model_selector: str, hf_dataset=None):
     url = f"{BASE_URL}task/detect/{model_name}/{','.join(labels)}/{model_selector}"
     params = {"hf_dataset": hf_dataset} if hf_dataset else None
-    response = requests.post(url, headers=HEADERS, params=params)
+    response = requests.post(url, headers=HEADERS, params=params, timeout=60)
     return response.json()
 
 
 def train_generator(model_name: str, hf_dataset: str):
     url = f"{BASE_URL}task/generate/{model_name}"
     params = {"hf_dataset": hf_dataset}
-    response = requests.post(url, headers=HEADERS, params=params)
+    response = requests.post(url, headers=HEADERS, params=params, timeout=60)
     return response.json()
 
 
@@ -138,9 +138,9 @@ def run_datacomposer(
             return {"error": "Dataset file not found."}
     try:
         if files:
-            response = requests.post(url, headers=headers, data=data, files=files)
+            response = requests.post(url, headers=headers, data=data, files=files, timeout=60)
         else:
-            response = requests.post(url, headers=headers, data=data)
+            response = requests.post(url, headers=headers, data=data, timeout=60)
         if response.status_code == 202:
             try:
                 return response.json()
